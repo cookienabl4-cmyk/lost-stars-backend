@@ -14,10 +14,11 @@ app.use(express.json());
 
 // ⚠️ IMPORTANT: Change 'YOUR_PASSWORD' to your PostgreSQL password!
 const pool = new Pool({
-    connectionString: 'postgresql://postgres:cookienabl78654321@db.cawcnksflkcbsnkwqhrt.supabase.co:5432/postgres',
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
-    }
+    },
+    family: 4  // 👈 ADD THIS LINE - Forces IPv4
 });
 
 // Test database connection
