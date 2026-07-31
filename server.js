@@ -13,14 +13,38 @@ app.use(cors());
 app.use(express.json());
 
 // ⚠️ IMPORTANT: Change 'YOUR_PASSWORD' to your PostgreSQL password!
+// Database connection - FORCE IPv4 with fallback
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
-    },
-    family: 4  // 👈 ADD THIS LINE - Forces IPv4
+    }
 });
 
+// Test the connection and try without SSL if it fails
+pool.connect((err, client, release) => {
+    if (err) {
+        console.error('❌ Database connection failed:', err.message);
+        console.log('🔄 Trying alternative connection without SSL...');
+        
+        const pool2 = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: false
+        });
+        
+        pool2.connect((err2, client2, release2) => {
+            if (err2) {
+                console.error('❌ Both connection attempts failed.');
+            } else {
+                console.log('✅ Connected to PostgreSQL (without SSL)!');
+                release2();
+            }
+        });
+    } else {
+        console.log('✅ Connected to PostgreSQL!');
+        release();
+    }
+});
 // Test database connection
 pool.connect((err) => {
     if (err) {
