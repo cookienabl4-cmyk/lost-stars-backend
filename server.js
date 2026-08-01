@@ -139,6 +139,30 @@ app.get('/api/star/:hash_id', async (req, res) => {
         res.status(500).json({ error: 'Telescope is broken.' });
     }
 });
+// TEMPORARY: Add hash_id column to existing stars
+app.get('/api/fix-db', async (req, res) => {
+    try {
+        // Check if hash_id column exists
+        const check = await pool.query(`
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = 'stars' AND column_name = 'hash_id'
+        `);
+        
+        if (check.rows.length === 0) {
+            // Add the column
+            await pool.query(`
+                ALTER TABLE stars ADD COLUMN hash_id VARCHAR(12) UNIQUE
+            `);
+            res.json({ success: true, message: 'hash_id column added!' });
+        } else {
+            res.json({ success: true, message: 'hash_id column already exists' });
+        }
+    } catch (err) {
+        console.error('Error fixing DB:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
 
 // Start the server
 const PORT = process.env.PORT || 4000;
