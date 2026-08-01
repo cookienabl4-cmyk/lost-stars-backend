@@ -55,8 +55,8 @@ pool.query(createTableQuery)
 // API: Post a new star
 app.post('/api/stars', async (req, res) => {
     const { message, emotion } = req.body;
-    if (!message || message.length > 280) {
-        return res.status(400).json({ error: 'Message must be 1-280 chars.' });
+    if (!message || message.length > 1000) {
+        return res.status(400).json({ error: 'Message must be 1-1000 chars.' });
     }
 
     const hash_id = shortid.generate();
