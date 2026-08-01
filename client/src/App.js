@@ -183,6 +183,7 @@ function App() {
 
   // ---------- 2. FETCH STARS ----------
   useEffect(() => {
+    const timestamp = new Date().getTime();
     axios.get('/api/https://lost-stars-backend.onrender.com/sky')
       .then(res => {
         const starsWithData = res.data.stars.map(star => ({
@@ -449,6 +450,7 @@ function App() {
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
               placeholder="Write your unsent message..."
+               maxLength={1000} 
               style={{ 
                 padding: '12px 18px', 
                 background: 'rgba(255,255,255,0.03)', 
