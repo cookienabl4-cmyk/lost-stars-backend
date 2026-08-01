@@ -177,6 +177,27 @@ app.get('/api/delete-all-stars', async (req, res) => {
     }
 });
 
+// Delete a specific star by hash_id
+app.delete('/api/star/:hash_id', async (req, res) => {
+    const { hash_id } = req.params;
+    try {
+        const result = await pool.query(
+            'DELETE FROM stars WHERE hash_id = $1 RETURNING *',
+            [hash_id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Star not found' });
+        }
+        res.json({ 
+            success: true, 
+            message: '💫 Star has been deleted',
+            deleted: result.rows[0]
+        });
+    } catch (err) {
+        console.error('Error deleting star:', err);
+        res.status(500).json({ error: 'Failed to delete star' });
+    }
+});
 
 // Start the server
 const PORT = process.env.PORT || 4000;
