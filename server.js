@@ -164,7 +164,7 @@ app.get('/api/fix-db', async (req, res) => {
     }
 });
 // 🎂 BIRTHDAY SPECIAL: Delete ALL stars
-app.delete('/api/delete-all-stars', async (req, res) => {
+app.get('/api/delete-all-stars', async (req, res) => {
     try {
         const result = await pool.query('DELETE FROM stars');
         res.json({ 
