@@ -163,6 +163,20 @@ app.get('/api/fix-db', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+// 🎂 BIRTHDAY SPECIAL: Delete ALL stars
+app.delete('/api/delete-all-stars', async (req, res) => {
+    try {
+        const result = await pool.query('DELETE FROM stars');
+        res.json({ 
+            success: true, 
+            message: `✨ All ${result.rowCount} stars have been deleted. The void is clean!` 
+        });
+    } catch (err) {
+        console.error('Error deleting stars:', err);
+        res.status(500).json({ error: 'Failed to delete stars.' });
+    }
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 4000;

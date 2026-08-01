@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
@@ -183,22 +184,35 @@ function App() {
 
   // ---------- 2. FETCH STARS ----------
   useEffect(() => {
-    const timestamp = new Date().getTime();
-    axios.get('/api/https://lost-stars-backend.onrender.com/sky')
-      .then(res => {
-        const starsWithData = res.data.stars.map(star => ({
-          ...star,
-          birthTime: Date.now(),
-          created_at: star.created_at || new Date().toISOString()
-        }));
-        setStars(starsWithData);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Sky is cloudy:", err);
-        setLoading(false);
-      });
-  }, []);
+  const fetchStars = async () => {
+    try {
+      const cacheBreaker = new Date().getTime();
+      const response = await axios.get(
+        `https://lost-stars-backend.onrender.com/api/sky?t=${cacheBreaker}`
+      );
+      
+      console.log("Raw API response:", response.data);
+      
+      // ✅ SAFE: Check if stars exist, fallback to empty array
+      const starsArray = response.data?.stars || [];
+      
+      const starsWithData = starsArray.map((star) => ({
+        ...star,
+        birthTime: Date.now(),
+        created_at: star.created_at || new Date().toISOString(),
+        hash_id: star.hash_id || star.hashId || `star_${Date.now()}`,
+      }));
+      
+      setStars(starsWithData);
+      setLoading(false);
+    } catch (err) {
+      console.error("❌ Sky is cloudy:", err);
+      setLoading(false);
+    }
+  };
+  
+  fetchStars();
+}, []);
 
   // ---------- 3. RANDOM SHOOTING STARS ----------
   useEffect(() => {
