@@ -178,7 +178,7 @@ app.get('/api/delete-all-stars', async (req, res) => {
 });
 
 // Delete a specific star by hash_id
-app.delete('/api/star/:hash_id', async (req, res) => {
+app.get('/api/star/:hash_id', async (req, res) => {
     const { hash_id } = req.params;
     try {
         const result = await pool.query(
@@ -199,7 +199,7 @@ app.delete('/api/star/:hash_id', async (req, res) => {
     }
 });
 // Delete a star by ID (number)
-app.delete('/api/star/id/:id', async (req, res) => {
+app.get('/api/star/id/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query(
