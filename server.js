@@ -6,7 +6,9 @@ const http = require('http');
 const WebSocket = require('ws');
 const dns = require('dns');
 
+// FORCE IPv6 FOR SUPABASE (if needed)
 dns.setDefaultResultOrder('verbatim');
+
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
@@ -14,13 +16,14 @@ const wss = new WebSocket.Server({ server });
 app.use(cors());
 app.use(express.json());
 
-// ⚠️ IMPORTANT: Change 'YOUR_PASSWORD' to your PostgreSQL password!
+// Database connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
 });
+
 // Test database connection
 pool.connect((err) => {
     if (err) {
@@ -30,7 +33,7 @@ pool.connect((err) => {
     }
 });
 
-// Create the stars table
+// Create stars table
 const createTableQuery = `
 CREATE TABLE IF NOT EXISTS stars (
     id SERIAL PRIMARY KEY,
@@ -80,7 +83,6 @@ app.post('/api/stars', async (req, res) => {
             [hash_id, message, emotion, pos_x, pos_y, pos_z, color_hue]
         );
 
-        // Broadcast to all connected clients
         wss.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(JSON.stringify({ 
@@ -93,7 +95,7 @@ app.post('/api/stars', async (req, res) => {
         res.json({ 
             success: true, 
             hash_id: result.rows[0].hash_id,
-            link: `http://localhost:3000/star/${result.rows[0].hash_id}`
+            link: `https://lost-stars-frontend.vercel.app/star/${result.rows[0].hash_id}`
         });
     } catch (err) {
         console.error(err);
@@ -101,7 +103,7 @@ app.post('/api/stars', async (req, res) => {
     }
 });
 
-// API: Fetch tonight's stars
+// API: Get all stars
 app.get('/api/sky', async (req, res) => {
     try {
         const result = await pool.query(
@@ -113,6 +115,7 @@ app.get('/api/sky', async (req, res) => {
         );
         res.json({ stars: result.rows });
     } catch (err) {
+        console.error('Error fetching stars:', err);
         res.status(500).json({ error: 'Sky is cloudy.' });
     }
 });
@@ -132,12 +135,13 @@ app.get('/api/star/:hash_id', async (req, res) => {
         }
         res.json(result.rows[0]);
     } catch (err) {
+        console.error('Error fetching star:', err);
         res.status(500).json({ error: 'Telescope is broken.' });
     }
 });
 
 // Start the server
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
     console.log(`✨ Lost Stars burning on http://localhost:${PORT}`);
     console.log('📡 WebSocket server ready for shooting stars!');
