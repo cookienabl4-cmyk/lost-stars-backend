@@ -15,9 +15,8 @@ app.use(cors());
 app.use(express.json());
 
 // ⚠️ IMPORTANT: Change 'YOUR_PASSWORD' to your PostgreSQL password!
-// Database connection - FORCE IPv4 with fallback
 const pool = new Pool({
-    host: '35.154.0.0',  // Replace with your IPv4 address
+    host: '2406:da1a:82a:9d01:1b8f:f7d5:c603:2a23',  // IPv6 address
     port: 5432,
     user: 'postgres',
     password: '123',
