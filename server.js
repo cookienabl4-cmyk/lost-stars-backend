@@ -16,11 +16,7 @@ app.use(express.json());
 
 // ⚠️ IMPORTANT: Change 'YOUR_PASSWORD' to your PostgreSQL password!
 const pool = new Pool({
-    host: '2406:da1a:82a:9d01:1b8f:f7d5:c603:2a23',  // IPv6 address
-    port: 5432,
-    user: 'postgres',
-    password: '123',
-    database: 'postgres',
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
