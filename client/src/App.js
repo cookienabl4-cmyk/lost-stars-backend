@@ -183,7 +183,7 @@ function App() {
 
   // ---------- 2. FETCH STARS ----------
   useEffect(() => {
-    axios.get('http://localhost:4000/api/sky')
+    axios.get('/api/https://lost-stars-backend.onrender.com/sky')
       .then(res => {
         const starsWithData = res.data.stars.map(star => ({
           ...star,
@@ -276,7 +276,7 @@ function App() {
     }
     
     try {
-      const res = await axios.get(`http://localhost:4000/api/star/${hashId}`);
+      const res = await axios.get(`https://lost-stars-backend.onrender.com/api/star/${hashId}`);
       if (res.data && res.data.message) {
         setSelectedMessage({
           message: res.data.message,
@@ -296,13 +296,13 @@ function App() {
     if (!userMessage.trim()) return;
     
     try {
-      const response = await axios.post('http://localhost:4000/api/stars', {
+      const response = await axios.post('https://lost-stars-backend.onrender.com/api/stars', {
         message: userMessage,
         emotion: 'miss'
       });
       
       const realHashId = response.data.hash_id;
-      const starData = await axios.get(`http://localhost:4000/api/star/${realHashId}`);
+      const starData = await axios.get(`https://lost-stars-backend.onrender.com/api/star/${realHashId}`);
       
       setStars(prev => [...prev, {
         pos_x: starData.data.pos_x || (Math.random() - 0.5) * 10,
