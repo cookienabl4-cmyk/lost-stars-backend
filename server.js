@@ -107,7 +107,7 @@ app.post('/api/stars', async (req, res) => {
 app.get('/api/sky', async (req, res) => {
     try {
         const result = await pool.query(
-            `SELECT hash_id, message, pos_x, pos_y, pos_z, color_hue, brightness, 
+            `SELECT id, hash_id, message, pos_x, pos_y, pos_z, color_hue, brightness, 
                     EXTRACT(EPOCH FROM created_at) as timestamp 
              FROM stars 
              WHERE expires_at > NOW() 
@@ -184,6 +184,27 @@ app.delete('/api/star/:hash_id', async (req, res) => {
         const result = await pool.query(
             'DELETE FROM stars WHERE hash_id = $1 RETURNING *',
             [hash_id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Star not found' });
+        }
+        res.json({ 
+            success: true, 
+            message: '💫 Star has been deleted',
+            deleted: result.rows[0]
+        });
+    } catch (err) {
+        console.error('Error deleting star:', err);
+        res.status(500).json({ error: 'Failed to delete star' });
+    }
+});
+// Delete a star by ID (number)
+app.delete('/api/star/id/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            'DELETE FROM stars WHERE id = $1 RETURNING *',
+            [id]
         );
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Star not found' });
