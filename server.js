@@ -4,7 +4,9 @@ const { Pool } = require('pg');
 const shortid = require('shortid');
 const http = require('http');
 const WebSocket = require('ws');
+const dns = require('dns');
 
+dns.setDefaultResultOrder('verbatim');
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
@@ -15,34 +17,13 @@ app.use(express.json());
 // ⚠️ IMPORTANT: Change 'YOUR_PASSWORD' to your PostgreSQL password!
 // Database connection - FORCE IPv4 with fallback
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    host: '35.154.0.0',  // Replace with your IPv4 address
+    port: 5432,
+    user: 'postgres',
+    password: '123',
+    database: 'postgres',
     ssl: {
         rejectUnauthorized: false
-    }
-});
-
-// Test the connection and try without SSL if it fails
-pool.connect((err, client, release) => {
-    if (err) {
-        console.error('❌ Database connection failed:', err.message);
-        console.log('🔄 Trying alternative connection without SSL...');
-        
-        const pool2 = new Pool({
-            connectionString: process.env.DATABASE_URL,
-            ssl: false
-        });
-        
-        pool2.connect((err2, client2, release2) => {
-            if (err2) {
-                console.error('❌ Both connection attempts failed.');
-            } else {
-                console.log('✅ Connected to PostgreSQL (without SSL)!');
-                release2();
-            }
-        });
-    } else {
-        console.log('✅ Connected to PostgreSQL!');
-        release();
     }
 });
 // Test database connection
