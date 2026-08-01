@@ -619,10 +619,10 @@ function App() {
         </div>
       )}
       
-      {/* ---------- BACKGROUND MUSIC ---------- */}
+     {/* ---------- BACKGROUND MUSIC - TOP RIGHT ---------- */}
 <div style={{
   position: 'fixed',
-  bottom: 20,
+  top: 20,
   right: 20,
   zIndex: 100,
   opacity: 0.4,
@@ -631,52 +631,54 @@ function App() {
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
   borderRadius: 16,
-  padding: '14px 18px',
+  padding: '12px 16px',
   border: '1px solid rgba(255,255,255,0.04)',
-  maxWidth: '250px'
+  maxWidth: '220px',
+  maxHeight: '130px',
+  overflow: 'hidden'
 }}
 onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
 onMouseLeave={(e) => e.currentTarget.style.opacity = 0.4}
 >
   <p style={{
     color: 'rgba(255,255,255,0.15)',
-    fontSize: 8,
-    letterSpacing: 3,
+    fontSize: 7,
+    letterSpacing: 2,
     textTransform: 'uppercase',
-    margin: '0 0 10px 0',
+    margin: '0 0 6px 0',
     fontFamily: '"Georgia", serif'
   }}>
     ✦ Lost Stars Radio ✦
   </p>
   
-  {/* SONG 1: Reflections - The Neighbourhood */}
-  <div style={{ marginBottom: 10 }}>
+  {/* Song 1: Reflections */}
+  <div style={{ marginBottom: 4 }}>
     <p style={{
-      color: 'rgba(255,255,255,0.1)',
-      fontSize: 9,
-      margin: '0 0 4px 0',
+      color: 'rgba(255,255,255,0.08)',
+      fontSize: 7,
+      margin: '0 0 2px 0',
       fontFamily: '"Georgia", serif',
       fontStyle: 'italic'
     }}>
       Reflections — The Neighbourhood
     </p>
-    <audio controls style={{ width: '100%', height: '28px', opacity: 0.7 }}>
+    <audio controls style={{ width: '100%', height: '24px', opacity: 0.7 }}>
       <source src="/audio/reflections.mp3" type="audio/mpeg" />
     </audio>
   </div>
   
-  {/* SONG 2: M. - Anil Emre Daldal */}
+  {/* Song 2: M. */}
   <div>
     <p style={{
-      color: 'rgba(255,255,255,0.1)',
-      fontSize: 9,
-      margin: '0 0 4px 0',
+      color: 'rgba(255,255,255,0.08)',
+      fontSize: 7,
+      margin: '0 0 2px 0',
       fontFamily: '"Georgia", serif',
       fontStyle: 'italic'
     }}>
       M. — Anil Emre Daldal
     </p>
-    <audio controls style={{ width: '100%', height: '28px', opacity: 0.7 }}>
+    <audio controls style={{ width: '100%', height: '24px', opacity: 0.7 }}>
       <source src="/audio/m-song.mp3" type="audio/mpeg" />
     </audio>
   </div>
